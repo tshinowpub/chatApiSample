@@ -1,0 +1,75 @@
+FROM php:7-apache
+MAINTAINER tshinowpub <shino.t.music@gmail.com>
+
+RUN usermod -u 1000 www-data \
+  && groupmod -g 1000 www-data
+
+RUN sed -i "s/\/var\/www\/html/\/var\/www\/html\/web/g" /etc/apache2/sites-available/000-default.conf
+RUN sed -i "s/\/var\/www/\/var\/www\/html/g" /etc/apache2/apache2.conf
+RUN sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
+
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod 777 -R /var/www/html
+RUN a2enmod rewrite
+
+RUN apt-get update \
+    && apt-get install -y \
+        curl \
+        cron \
+        g++ \
+        git \
+        gcc \
+        libfreetype6-dev \
+        libicu-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        make \
+        mc \
+        supervisor \
+        tar \
+        unzip \
+        vim \
+        wget
+
+RUN docker-php-ext-configure \
+  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+
+RUN docker-php-ext-install \
+    bcmath \
+    gd \
+    hash \
+    intl \
+    json \
+    mbstring \
+    mcrypt \
+    mysqli \
+    opcache \
+    pdo \
+    pdo_mysql \
+    simplexml \
+    soap \
+    sockets \
+    xsl \
+    zip
+
+RUN pecl install xdebug \
+  && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_connect_back=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_host=ide.local" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_port=9000" >> /usr/local/etc/php/conf.d/xdebug.ini \
+  && echo "xdebug.remote_log=/tmp/php5-xdebug.log" >> /usr/local/etc/php/conf.d/xdebug.ini
+
+RUN export LANG=ja_JP.UTF-8;
+
+COPY conf/php.ini /usr/local/etc/php/
+
+EXPOSE 80
+
+WORKDIR /var/www/html
+
+CMD ["apache2-foreground"]
