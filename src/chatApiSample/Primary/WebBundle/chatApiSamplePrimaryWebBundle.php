@@ -1,9 +1,9 @@
 <?php
 
-namespace chatApiSample\Primary\WebBundle;
+namespace ChatApiSample\Primary\WebBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class chatApiSamplePrimaryWebBundle extends Bundle
+class ChatApiSamplePrimaryWebBundle extends Bundle
 {
 }
