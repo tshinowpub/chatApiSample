@@ -1,0 +1,5 @@
+user.email.not_blank: メールアドレスは必ず入力してください。
+user.username.not_blank: ユーザー名は必ず入力してください。
+user.password.not_blank: パスワードは必ず入力してください。
+user.username.length.max: ユーザ名は10文字以内で入力してください。
+user.password.length.min: パスワードは10文字以上で入力してください。

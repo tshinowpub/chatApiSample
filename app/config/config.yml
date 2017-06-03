@@ -2,15 +2,16 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@ChatApiSamplePrimaryWebBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: ja
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: ['%locale%'], logging: false }
     secret: '%secret%'
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
@@ -60,6 +61,12 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        mappings:
+            ChatApiSample:
+                type: yml
+                dir: "%kernel.root_dir%/../src/ChatApiSample/Secondary/Persistence/Resources/config/doctrine"
+                prefix: ChatApiSample\Secondary\Persistence\DTO
+                is_bundle: false
 
 # Swiftmailer Configuration
 swiftmailer:

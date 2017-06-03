@@ -1,0 +1,10 @@
+services:
+    usecase.create_user:
+        class: ChatApiSample\Domain\Chat\Usecase\CreateUser
+        arguments: ["@repository.user"]
+
+    repository.user:
+        class: ChatApiSample\Secondary\Persistence\Repository\UserRepository
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+        arguments:
+            - ChatApiSample\Secondary\Persistence\DTO\User
