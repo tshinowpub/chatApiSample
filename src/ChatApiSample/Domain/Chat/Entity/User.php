@@ -4,9 +4,14 @@ namespace ChatApiSample\Domain\Chat\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use ChatApiSample\Domain\Chat\Entity\AbstractEntity;
 
+/**
+ * @UniqueEntity("email", message = "user.email.unique")
+ * @UniqueEntity("username", message = "user.username.unique")
+ */
 class User extends AbstractEntity implements AdvancedUserInterface
 {
     /**
