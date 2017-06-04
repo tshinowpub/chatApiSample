@@ -16,4 +16,8 @@ class UserRepository extends AbstractEntityRepository implements UserRepositoryI
         $this->getEntityManager()->flush();
     }
 
+    public function getUser(int $id)
+    {
+        return $this->find($id);
+    }
 }

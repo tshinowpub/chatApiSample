@@ -6,3 +6,6 @@ user.plainPassword.length.min: パスワードは10文字以上で入力して�
 user.email.unique: このメールアドレスは既に利用されています。
 user.username.unique: このユーザ名は既に利用されています。
 user.username.regex: ユーザ名は半角英数字と「_」、「-」が利用できます。
+user.id.not_blank: IDは必ず指定してください。
+user.id.length.max: IDは10桁以内で指定してください。
+user.id.regex: IDは数字で指定してください。
