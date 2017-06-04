@@ -26,6 +26,10 @@ class User extends AbstractEntity implements AdvancedUserInterface
      *
      * @Assert\NotNull(message = "user.username.not_blank")
      * @Assert\Length(max=10, maxMessage = "user.username.length.max")
+     * @Assert\Regex(
+     *     pattern = "/^[a-zA-Z0-9|\_|-]+$/",
+     *     message = "user.username.regex"
+     * )
      */
     protected $username;
 
