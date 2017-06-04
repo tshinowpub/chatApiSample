@@ -7,6 +7,10 @@ services:
         class: ChatApiSample\Domain\Chat\Usecase\GetUser
         arguments: ["@repository.user"]
 
+    service.entity_converter:
+        class: ChatApiSample\Domain\Chat\Service\EntityConverter
+        arguments: ["@repository.user"]
+
     repository.user:
         class: ChatApiSample\Secondary\Persistence\Repository\UserRepository
         factory: ["@doctrine.orm.default_entity_manager", getRepository]
