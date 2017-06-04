@@ -41,11 +41,13 @@ class User extends AbstractEntity implements AdvancedUserInterface
    protected $role;
 
     /**
-     * @var string $password
-     *
-     * @Assert\NotNull(message = "user.password.not_blank")
-     * @Assert\Length(min = 10, max=32, minMessage = "user.password.length.min")
-     */
+    * @var string $plainPassword
+    *
+    * @Assert\NotNull(message = "user.plainPassword.not_blank")
+    * @Assert\Length(min = 10, max=32, minMessage = "user.plainPassword.length.min")
+    */
+    protected $plainPassword;
+
     protected $password;
 
 
@@ -83,6 +85,18 @@ class User extends AbstractEntity implements AdvancedUserInterface
         return [
             $this->role
         ];
+    }
+
+    public function setPlainPassword(string $plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     public function setPassword(string $password)

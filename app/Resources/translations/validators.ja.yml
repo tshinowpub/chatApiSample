@@ -1,8 +1,8 @@
 user.email.not_blank: メールアドレスは必ず入力してください。
 user.username.not_blank: ユーザー名は必ず入力してください。
-user.password.not_blank: パスワードは必ず入力してください。
+user.plainPassword.not_blank: パスワードは必ず入力してください。
 user.username.length.max: ユーザ名は10文字以内で入力してください。
-user.password.length.min: パスワードは10文字以上で入力してください。
+user.plainPassword.length.min: パスワードは10文字以上で入力してください。
 user.email.unique: このメールアドレスは既に利用されています。
 user.username.unique: このユーザ名は既に利用されています。
 user.username.regex: ユーザ名は半角英数字と「_」、「-」が利用できます。
