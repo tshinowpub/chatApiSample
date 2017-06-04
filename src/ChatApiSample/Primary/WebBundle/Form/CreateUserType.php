@@ -33,7 +33,7 @@ class CreateUserType extends AbstractType
                 ]
             )
             ->add(
-                'password',
+                'plainPassword',
                 PasswordType::class,
                 [
                     'label' => 'パスワード',
