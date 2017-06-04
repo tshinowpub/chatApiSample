@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiController extends AbstractApiController
 {
+    const API_VERSION = 'v1';
 
     const STATUS_BAD_REQUEST = 400;
     const STATUS_CREATED = 201;
@@ -23,6 +24,11 @@ class ApiController extends AbstractApiController
      */
     public function apiUserCreateAction(Request $request)
     {
+        $logger = $this->get('logger.create_user_logger');
+        $logger->info('api access api_user_create', [
+            'version' => self::API_VERSION,
+        ]);
+
         $user = new User();
         $form = $this->createForm(CreateUserType::class, $user);
 
@@ -42,6 +48,16 @@ class ApiController extends AbstractApiController
             $createUser = $this->get('usecase.create_user');
             $createUser->createUser($user);
 
+            $responseCreateUser = $this->toArrayFromEntity($user, [
+                'role',
+                'password',
+            ]);
+
+            $logger->info('api api_user_create success', [
+                'version' => self::API_VERSION,
+                'parameter' => $responseCreateUser,
+            ]);
+
         } else {
 
             foreach ($form as $fieldName => $formField) {
@@ -51,6 +67,11 @@ class ApiController extends AbstractApiController
                 }
             }
 
+            $logger->info('create_user invalid', [
+                'version' => self::API_VERSION,
+                'parameter' => $data,
+            ]);
+
             return new JsonResponse([
                 "error_code" => self::ERROR_CODE_BAD_REQUEST,
                 'errors' => $errors,
@@ -58,10 +79,7 @@ class ApiController extends AbstractApiController
         }
 
         return new JsonResponse(
-            $this->toArrayFromEntity($user, [
-                'role',
-                'password',
-            ]),
+            $responseCreateUser,
             self::STATUS_CREATED
         );
     }
