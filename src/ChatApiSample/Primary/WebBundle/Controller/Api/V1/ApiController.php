@@ -5,7 +5,6 @@ namespace ChatApiSample\Primary\WebBundle\Controller\Api\V1;
 use ChatApiSample\Primary\WebBundle\Controller\Api\V1\AbstractApiController;
 use ChatApiSample\Primary\WebBundle\Form\CreateUserType;
 use ChatApiSample\Primary\WebBundle\Form\GetUserType;
-use ChatApiSample\Secondary\Persistence\DTO\User;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -35,7 +34,7 @@ class ApiController extends AbstractApiController
             'version' => self::API_VERSION,
         ]);
 
-        $user = new User();
+        $user = $this->get('service.user_factory')->create();
         $form = $this->createForm(CreateUserType::class, $user);
 
         $data = $request->query->all();
