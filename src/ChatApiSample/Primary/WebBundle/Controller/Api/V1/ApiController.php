@@ -7,6 +7,7 @@ use ChatApiSample\Primary\WebBundle\Form\CreateUserType;
 use ChatApiSample\Secondary\Persistence\DTO\User;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -21,6 +22,7 @@ class ApiController extends AbstractApiController
 
     /**
      * @Route("/api/v1/user/create", name="api_user_create")
+     * @Method("POST")
      */
     public function apiUserCreateAction(Request $request)
     {
