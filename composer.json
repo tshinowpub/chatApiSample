@@ -26,9 +26,10 @@
         "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
-        "phake/phake": "^2.3",
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.0",
+        "phpunit/phpunit" : "^4.8",
+		"phake/phake" : "^2.3"
     },
     "scripts": {
         "symfony-scripts": [
