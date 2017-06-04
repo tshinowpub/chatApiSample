@@ -3,35 +3,16 @@
 namespace ChatApiSample\Primary\WebBundle\Controller\Api\V1;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use ChatApiSample\Domain\Chat\Entity\AbstractEntity;
 
 abstract class AbstractApiController extends Controller
 {
-    protected function toArrayFromEntity($entity, $ignoredAttributes = [])
+    protected function toArrayFromEntity(AbstractEntity $entity, array $ignoredAttributes = [])
     {
-        $encoders = array(new JsonEncoder());
+        $entityConverter = $this->get('service.entity_converter');
+        $entityConverter->setIgnoredAttributes($ignoredAttributes);
 
-        $propertyNormalizer = new PropertyNormalizer();
-        if(count($ignoredAttributes) > 0) {
-            $propertyNormalizer->setIgnoredAttributes($ignoredAttributes);
-        }
-
-        $dateTimeNormalizer = new DateTimeNormalizer(\DateTime::ATOM);
-
-        $normalizers = [
-            $propertyNormalizer,
-            $dateTimeNormalizer,
-        ];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        $jsonContent = $serializer->serialize($entity, 'json');
-
-        return json_decode($jsonContent, true);
+        return $entityConverter->toArray($entity);
     }
 
     protected function getErrorMessages($form)
