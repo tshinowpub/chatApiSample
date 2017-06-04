@@ -33,4 +33,18 @@ abstract class AbstractApiController extends Controller
 
         return json_decode($jsonContent, true);
     }
+
+    protected function getErrorMessages($form)
+    {
+        $errors = [];
+        foreach ($form as $fieldName => $formField) {
+            $formFieldErrors = $formField->getErrors(true);
+            foreach ($formFieldErrors as $formFieldError) {
+                $errors[$fieldName][] = $formFieldError->getMessage();
+            }
+        }
+
+        return $errors;
+    }
+
 }

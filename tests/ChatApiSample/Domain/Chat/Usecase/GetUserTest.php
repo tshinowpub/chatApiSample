@@ -2,10 +2,9 @@
 
 namespace ChatApiSample\Domain\Chat\Usecase;
 
-use ChatApiSample\Domain\Chat\Entity\User;
 use ChatApiSample\Domain\Chat\Repository\UserRepositoryInterface;
 
-class CreateUserTest extends \PHPUnit_Framework_TestCase
+class GetUserTest extends \PHPUnit_Framework_TestCase
 {
     private $userRepository;
 
@@ -17,12 +16,12 @@ class CreateUserTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function ユーザーを作成できる ()
+    public function ユーザーを取得する ()
     {
-        $user = new User();
+        $id = 1;
 
-        $this->userRepository->createUser($user);
+        $this->userRepository->getUser($id);
 
-        \Phake::verify($this->userRepository, \Phake::times(1))->createUser($user);
+        \Phake::verify($this->userRepository, \Phake::times(1))->getUser($id);
     }
 }

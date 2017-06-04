@@ -3,6 +3,10 @@ services:
         class: ChatApiSample\Domain\Chat\Usecase\CreateUser
         arguments: ["@repository.user"]
 
+    usecase.get_user:
+        class: ChatApiSample\Domain\Chat\Usecase\GetUser
+        arguments: ["@repository.user"]
+
     repository.user:
         class: ChatApiSample\Secondary\Persistence\Repository\UserRepository
         factory: ["@doctrine.orm.default_entity_manager", getRepository]
@@ -19,6 +23,14 @@ services:
         class: Monolog\Logger
         calls:
             - [pushHandler, ["@monolog.handler.create_user"]]
+            - [pushProcessor, ["@logger.web_processor"]]
+            - [pushProcessor, ["@logger.memory_usage_processor"]]
+        arguments: ['create_user']
+
+    logger.get_user_logger:
+        class: Monolog\Logger
+        calls:
+            - [pushHandler, ["@monolog.handler.get_user"]]
             - [pushProcessor, ["@logger.web_processor"]]
             - [pushProcessor, ["@logger.memory_usage_processor"]]
         arguments: ['create_user']
