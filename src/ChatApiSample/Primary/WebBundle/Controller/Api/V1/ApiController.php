@@ -18,10 +18,12 @@ class ApiController extends AbstractApiController
     const STATUS_SUCCESS = 200;
     const STATUS_CREATED = 201;
     const STATUS_BAD_REQUEST = 400;
+    const STATUS_UNAUTHORIZED = 401;
     const STATUS_NOT_FOUND = 404;
 
     const ERROR_CODE_BAD_REQUEST = 'BAD_VALUE';
     const ERROR_CODE_RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
+    const ERROR_CODE_UNAUTHORIZED = 'UNAUTHORIZED';
 
     /**
      * @Route("/api/v1/user/create", name="api_user_create")
@@ -33,6 +35,17 @@ class ApiController extends AbstractApiController
         $logger->info('api access api_user_create', [
             'version' => self::API_VERSION,
         ]);
+
+        if(!$this->isAuthorized($request->query->get('apiKey'))) {
+            $logger->info('create_user resource_not_found', [
+                'version' => self::API_VERSION,
+                'parameter' => $request->query->all(),
+            ]);
+
+            return new JsonResponse([
+                "error_code" => self::ERROR_CODE_UNAUTHORIZED,
+            ], self::STATUS_UNAUTHORIZED);
+        }
 
         $user = $this->get('service.user_factory')->create();
         $form = $this->createForm(CreateUserType::class, $user);
@@ -95,6 +108,17 @@ class ApiController extends AbstractApiController
         $logger->info('api access api_get_user', [
             'version' => self::API_VERSION,
         ]);
+
+        if(!$this->isAuthorized($request->query->get('apiKey'))) {
+            $logger->info('get_user resource_not_found', [
+                'version' => self::API_VERSION,
+                'parameter' => $request->query->all(),
+            ]);
+
+            return new JsonResponse([
+                "error_code" => self::ERROR_CODE_UNAUTHORIZED,
+            ], self::STATUS_UNAUTHORIZED);
+        }
 
         $form = $this->createForm(GetUserType::class);
 
