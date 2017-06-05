@@ -28,4 +28,9 @@ abstract class AbstractApiController extends Controller
         return $errors;
     }
 
+    protected function isAuthorized($apiKey)
+    {
+        return $this->getParameter('apiKey') == $apiKey;
+    }
+
 }
