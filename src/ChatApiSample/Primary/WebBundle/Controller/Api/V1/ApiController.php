@@ -56,6 +56,7 @@ class ApiController extends AbstractApiController
             $responseCreateUser = $this->toArrayFromEntity($user, [
                 'role',
                 'password',
+                'plainPassword',
             ]);
 
             $logger->info('api api_user_create success', [
@@ -121,7 +122,7 @@ class ApiController extends AbstractApiController
 
             }
 
-            $responseUser = $this->toArrayFromEntity($user, ['role', 'password']);
+            $responseUser = $this->toArrayFromEntity($user, ['role', 'password', 'plainPassword']);
 
         }  else {
 
