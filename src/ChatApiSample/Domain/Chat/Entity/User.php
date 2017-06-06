@@ -139,4 +139,14 @@ class User extends AbstractEntity implements AdvancedUserInterface
     {
         return true;
     }
+
+    public function getApiIgnoreProperty()
+    {
+        return [
+            'role',
+            'password',
+            'plainPassword',
+            'version'
+        ];
+    }
 }

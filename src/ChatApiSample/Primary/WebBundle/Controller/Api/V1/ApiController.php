@@ -31,16 +31,12 @@ class ApiController extends AbstractApiController
      */
     public function apiUserCreateAction(Request $request)
     {
-        $logger = $this->get('logger.create_user_logger');
-        $logger->info('api access api_user_create', [
-            'version' => self::API_VERSION,
-        ]);
+        $this->setLogger($this->get('logger.create_user_logger'));
+        $this->writeLog('api access api_user_create');
 
         if(!$this->isAuthorized($request->query->get('apiKey'))) {
-            $logger->info('create_user resource_not_found', [
-                'version' => self::API_VERSION,
-                'parameter' => $request->query->all(),
-            ]);
+
+            $this->writeLog('create_user resource_not_found', $request->query->all());
 
             return new JsonResponse([
                 "error_code" => self::ERROR_CODE_UNAUTHORIZED,
@@ -66,26 +62,16 @@ class ApiController extends AbstractApiController
             $createUser = $this->get('usecase.create_user');
             $createUser->createUser($user);
 
-            $responseCreateUser = $this->toArrayFromEntity($user, [
-                'role',
-                'password',
-                'plainPassword',
-            ]);
+            $responseCreateUser = $this->toArrayFromEntity($user, $user->getApiIgnoreProperty());
 
-            $logger->info('api api_user_create success', [
-                'version' => self::API_VERSION,
-                'parameter' => $responseCreateUser,
-            ]);
+            $this->writeLog('api api_user_create success', $responseCreateUser);
 
         } else {
 
             $errors = $this->getErrorMessages($form);
 
-            $logger->info('create_user invalid', [
-                'version' => self::API_VERSION,
-                'parameter' => $data,
-            ]);
-
+            $this->writeLog('create_user invalid', $data);
+            
             return new JsonResponse([
                 "error_code" => self::ERROR_CODE_BAD_REQUEST,
                 'errors' => $errors,
@@ -104,16 +90,12 @@ class ApiController extends AbstractApiController
      */
     public function apiGetUserAction(Request $request, $id)
     {
-        $logger = $this->get('logger.get_user_logger');
-        $logger->info('api access api_get_user', [
-            'version' => self::API_VERSION,
-        ]);
+        $this->setLogger($this->get('logger.get_user_logger'));
+        $this->writeLog('api access api_get_user');
 
         if(!$this->isAuthorized($request->query->get('apiKey'))) {
-            $logger->info('get_user resource_not_found', [
-                'version' => self::API_VERSION,
-                'parameter' => $request->query->all(),
-            ]);
+
+            $this->writeLog('get_user resource_not_found', $request->query->all());
 
             return new JsonResponse([
                 "error_code" => self::ERROR_CODE_UNAUTHORIZED,
@@ -135,27 +117,20 @@ class ApiController extends AbstractApiController
 
             if(is_null($user)) {
 
-                $logger->info('get_user resource_not_found', [
-                    'version' => self::API_VERSION,
-                    'parameter' => $data,
-                ]);
+                $this->writeLog('get_user resource_not_found', $data);
 
                 return new JsonResponse([
                     "error_code" => self::ERROR_CODE_RESOURCE_NOT_FOUND,
                 ], self::STATUS_NOT_FOUND);
-
             }
 
-            $responseUser = $this->toArrayFromEntity($user, ['role', 'password', 'plainPassword']);
+            $responseUser = $this->toArrayFromEntity($user, $user->getApiIgnoreProperty());
 
         }  else {
 
             $errors = $this->getErrorMessages($form);
 
-            $logger->info('get_user invalid', [
-                'version' => self::API_VERSION,
-                'parameter' => $data,
-            ]);
+            $this->writeLog('get_user invalid', $data);
 
             return new JsonResponse([
                 "error_code" => self::ERROR_CODE_BAD_REQUEST,
