@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}管理画面{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="container">
+                <header></header>
+                <h1>{% block h1 %}管理画面{% endblock %}</h1>
+                {% block nav %}
+                    <nav>
+                        <ul>
+                            <li>
+                                <a href="">ダッシュボード</a>
+                            </li>
+                            <li>
+                                <a href="">ユーザー管理</a>
+                            </li>
+                            <li>
+                                <a href="">管理者管理</a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endblock %}
+
+                <div class="l-main">
+                    {% block main %}{% endblock %}
+                </div>
+
+            </div>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
