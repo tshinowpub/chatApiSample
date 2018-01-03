@@ -3,34 +3,57 @@
 namespace ChatApiSample\Primary\WebBundle\Controller\Api\V1;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Psr\Log\LoggerInterface;
+use ChatApiSample\Domain\Chat\Entity\AbstractEntity;
 
 abstract class AbstractApiController extends Controller
 {
-    protected function toArrayFromEntity($entity, $ignoredAttributes = [])
+    const API_VERSION = 'v1';
+
+    protected $logger;
+
+    protected function setLogger(LoggerInterface $logger)
     {
-        $encoders = array(new JsonEncoder());
+        $this->logger = $logger;
+    }
 
-        $propertyNormalizer = new PropertyNormalizer();
-        if(count($ignoredAttributes) > 0) {
-            $propertyNormalizer->setIgnoredAttributes($ignoredAttributes);
-        }
-
-        $dateTimeNormalizer = new DateTimeNormalizer(\DateTime::ATOM);
-
-        $normalizers = [
-            $propertyNormalizer,
-            $dateTimeNormalizer,
+    protected function writeLog(string $message, array $parameter = null)
+    {
+        $info = [
+            'version' => self::API_VERSION,
         ];
 
-        $serializer = new Serializer($normalizers, $encoders);
+        if(!is_null($parameter)) {
+            $info['parameter'] = $parameter;
+        }
 
-        $jsonContent = $serializer->serialize($entity, 'json');
-
-        return json_decode($jsonContent, true);
+        $this->logger->info($message, $info);
     }
+
+    protected function toArrayFromEntity(AbstractEntity $entity, array $ignoredAttributes = [])
+    {
+        $entityConverter = $this->get('service.entity_converter');
+        $entityConverter->setIgnoredAttributes($ignoredAttributes);
+
+        return $entityConverter->toArray($entity);
+    }
+
+    protected function getErrorMessages($form)
+    {
+        $errors = [];
+        foreach ($form as $fieldName => $formField) {
+            $formFieldErrors = $formField->getErrors(true);
+            foreach ($formFieldErrors as $formFieldError) {
+                $errors[$fieldName][] = $formFieldError->getMessage();
+            }
+        }
+
+        return $errors;
+    }
+
+    protected function isAuthorized($apiKey)
+    {
+        return $this->getParameter('apiKey') == $apiKey;
+    }
+
 }

@@ -26,6 +26,10 @@ class User extends AbstractEntity implements AdvancedUserInterface
      *
      * @Assert\NotNull(message = "user.username.not_blank")
      * @Assert\Length(max=10, maxMessage = "user.username.length.max")
+     * @Assert\Regex(
+     *     pattern = "/^[a-zA-Z0-9|\_|-]+$/",
+     *     message = "user.username.regex"
+     * )
      */
     protected $username;
 
@@ -37,11 +41,13 @@ class User extends AbstractEntity implements AdvancedUserInterface
    protected $role;
 
     /**
-     * @var string $password
-     *
-     * @Assert\NotNull(message = "user.password.not_blank")
-     * @Assert\Length(min = 10, max=32, minMessage = "user.password.length.min")
-     */
+    * @var string $plainPassword
+    *
+    * @Assert\NotNull(message = "user.plainPassword.not_blank")
+    * @Assert\Length(min = 10, max=32, minMessage = "user.plainPassword.length.min")
+    */
+    protected $plainPassword;
+
     protected $password;
 
 
@@ -79,6 +85,18 @@ class User extends AbstractEntity implements AdvancedUserInterface
         return [
             $this->role
         ];
+    }
+
+    public function setPlainPassword(string $plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     public function setPassword(string $password)
@@ -120,5 +138,15 @@ class User extends AbstractEntity implements AdvancedUserInterface
     public function isEnabled()
     {
         return true;
+    }
+
+    public function getApiIgnoreProperty()
+    {
+        return [
+            'role',
+            'password',
+            'plainPassword',
+            'version'
+        ];
     }
 }

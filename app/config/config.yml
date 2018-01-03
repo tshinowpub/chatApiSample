@@ -75,3 +75,28 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+monolog:
+
+    handlers:
+        main:
+            type:  rotating_file
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            # max number of log files to keep
+            # defaults to zero, which means infinite files
+            max_files: 30
+        create_user:
+            type:  rotating_file
+            path:  '%kernel.logs_dir%/api/v1/user/create_user.log'
+            level: info
+            # max number of log files to keep
+            # defaults to zero, which means infinite files
+            max_files: 30
+        get_user:
+            type:  rotating_file
+            path:  '%kernel.logs_dir%/api/v1/user/get_user.log'
+            level: info
+            # max number of log files to keep
+            # defaults to zero, which means infinite files
+            max_files: 30

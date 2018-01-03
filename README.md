@@ -1,69 +1,96 @@
-Symfony Standard Edition
-========================
+# ChatSampleApi
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+2chのような掲示板のAPIのサンプルです。
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+## 動作確認環境
 
-What's inside?
---------------
+- Apache 2.4
+- PHP 7.1
+- MySQL 5.7
 
-The Symfony Standard Edition is configured with the following defaults:
+## 利用しているライブラリ
 
-  * An AppBundle you can use to start coding;
+- Symfony 3.2
+- phpunit
+- phake
 
-  * Twig as the only configured template engine;
 
-  * Doctrine ORM/DBAL;
+## 環境の作成方法
 
-  * Swiftmailer;
+以下の手順に従って動作環境を作成していきます。
 
-  * Annotations enabled for everything.
 
-It comes pre-configured with the following bundles:
+### docker コンテナを起動する
 
-  * **FrameworkBundle** - The core Symfony framework bundle
+プロジェクトのルートディレクトリから、``` infrastructure ```  ディレクトリに
+移動し、以下のコマンドを実行してください。
 
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
+```
+cd infrastructure
+docker-compose up -d
+```
 
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
+初回起動の場合、MySQLのデータを永続化させるためにデータを共有する、  
+MySQLのデータ用のディレクトリを作成する必要があります。
 
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
+```
+mkdir mysql
+```
 
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
+2回目以降の起動時は、
 
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
+```
+docker-compose start
+```
 
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
+で起動できます。
 
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
+### composer でのライブラリのインストール
 
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
+上記の手順に従ってdockerコンテナを作成した後に、web用のコンテナにログインした後に、
+composerをダウンロードし、ライブラリのインストールを行ってください。
 
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
+```
+## コンテナへのログイン
+docker-exec -it chat-web /bin/bash
 
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
+## composerのダウンロード
+curl -sS https://getcomposer.org/installer | php
 
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
+## ライブラリのインストール
+php composer.phar install
+```
 
-Enjoy!
+``` composer install ``` でタイムアウトが発生する場合は、以下のコマンドでタイムアウトの時間を変更してください。
 
-[1]:  https://symfony.com/doc/3.2/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/3.2/doctrine.html
-[8]:  https://symfony.com/doc/3.2/templating.html
-[9]:  https://symfony.com/doc/3.2/security.html
-[10]: https://symfony.com/doc/3.2/email.html
-[11]: https://symfony.com/doc/3.2/logging.html
-[12]: https://symfony.com/doc/3.2/assetic/asset_management.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
+```
+export COMPOSER_PROCESS_TIMEOUT={time}
+```
+
+### Symfony の設定ファイルの変更
+
+app/config/parameters.yml に下記の記載を行ってください。
+
+```
+parameters:
+    database_host: chat-db
+    database_port: null
+    database_name: chat
+    database_user: chat
+    database_password: chat
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: {各自設定してください。}
+
+```
+
+### データベースの作成
+
+doctrineを利用して、設定ファイルから自動でデータベースを生成することができます。
+コンテナにログインした後に、プロジェクトのルートディレクトリで以下のコマンドを実行してください。
+
+```
+php bin/console doctrine:schema:update --force
+```

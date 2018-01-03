@@ -23,11 +23,8 @@ ChatApiSample\Secondary\Persistence\DTO\User:
             type: text
             nullable: false
         password:
-            type: string
+            type: text
             nullable: false
-            length: 255
-            options:
-                fixed: false
         version:
             type: integer
             nullable: false
